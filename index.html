@@ -83,16 +83,17 @@
         if (!response.ok) throw new Error("Request failed");
 
         const data = await response.json();
-        status.textContent = data.docs.length
-          ? 'Found ${data.docs.length} books'
-          : "No books found.";
+       status.textContent = data.docs.length
+  ? "Found " + data.docs.length + " books"
+  : "No books found.";
 
-        data.docs.forEach((book) => {
+
+     data.docs.forEach((book) => {
           const card = document.createElement("div");
           card.className = "book";
 
           if (book.cover_i) {
-            const img = document.createElem ient("img");
+          img.src = "https://covers.openlibrary.org/b/id/" + book.cover_i + "-M.jpg";
            img.src = 'https://covers.openlibrary.org/b/id/$DIL0-M.jpg';
             img.alt = "Book cover";
             card.appendChild(img);
