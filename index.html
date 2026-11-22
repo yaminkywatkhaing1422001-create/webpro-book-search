@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Search App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f1ff;
+      text-align: center;
+      padding: 30px;
+      margin: 0;
+    }
+    h1 { color: #6741a5; }
+    input {
+      padding: 12px;
+      width: 60%;
+      max-width: 350px;
+      border: 1px solid #aaa;
+      border-radius: 8px;
+    }
+    button {
+      padding: 12px 20px;
+      background: #6741a5;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #results {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      max-width: 900px;
+      margin: 30px auto;
+    }
+    .book {
+      background: white;
+      padding: 18px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px #ddd;
+    }
+    .book img {
+      width: 110px;
+      height: 160px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  <h1>📚 Book Search App</h1>
+  <p>Search for your favorite books!</p>
+
+  <form id="searchForm">
+    <input id="searchInput" type="text"
+           placeholder="Enter book title..." required>
+    <button type="submit">Search</button>
+  </form>
+
+  <p id="status"></p>
+  <div id="results"></div>
+
+  <script>
+    const form = document.getElementById("searchForm");
+    const input = document.getElementById("searchInput");
+    const results = document.getElementById("results");
+    const status = document.getElementById("status");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const query = input.value.trim();
+      if (!query) return;
+
+      results.innerHTML = "";
+      status.textContent = "Searching...";
+
+      try {
+        const url = "https://openlibrary.org/search.json?title="
+          + encodeURIComponent(query) + "&limit=12";
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Request failed");
+
+        const data = await response.json();
+        status.textContent = data.docs.length
+          ? Found ${data.docs.length} books
+          : "No books found.";
+
+        data.docs.forEach((book) => {
+          const card = document.createElement("div");
+          card.className = "book";
+
+          if (book.cover_i) {
+            const img = document.createElement("img");
+            img.src = https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg;
+            img.alt = "Book cover";
+            card.appendChild(img);
+          }
+
+          const title = document.createElement("h3");
+          title.textContent = book.title || "Unknown title";
+
+          const author = document.createElement("p");
+          author.textContent = "Author: " +
+            (book.author_name?.join(", ") || "Unknown");
+
+          const year = document.createElement("p");
+          year.textContent = "First published: " +
+            (book.first_publish_year || "Unknown");
+
+          card.append(title, author, year);
+          results.appendChild(card);
+        });
+      } catch (error) {
+        status.textContent = "Could not load books. Please try again.";
+      }
+    });
+  </script>
+</body>
+</html>
