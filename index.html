@@ -112,10 +112,10 @@
 
           card.append(title, author, year);
           results.appendChild(card);
-        });
-      } catch (error) {
-        status.textContent = "Could not load books. Please try again.";
-      }
+       } catch (error) {
+  console.error(error);
+  status.textContent = "Could not load books. Please try again.";
+}
     });
   </script>
 </body>
