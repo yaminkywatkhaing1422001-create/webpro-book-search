@@ -84,7 +84,7 @@
 
         const data = await response.json();
         status.textContent = data.docs.length
-          ? Found ${data.docs.length} books
+          ? 'Found ${data.docs.length} books'
           : "No books found.";
 
         data.docs.forEach((book) => {
@@ -93,7 +93,7 @@
 
           if (book.cover_i) {
             const img = document.createElem ient("img");
-           img.src = https://covers.openlibrary.org/b/id/$DIL0-M.jpg;
+           img.src = 'https://covers.openlibrary.org/b/id/$DIL0-M.jpg';
             img.alt = "Book cover";
             card.appendChild(img);
           }
